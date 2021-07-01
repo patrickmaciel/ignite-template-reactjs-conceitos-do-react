@@ -14,47 +14,40 @@ export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
-  function getLastId()
-  {
-    if (tasks.length > 0) {
-      return tasks[tasks.length-1].id + 1;
-    }
-
-    return 1;
-  }
   function handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
     if (newTaskTitle.length === 0) return;
-    setTasks([{
-      id: getLastId(),
-      title: newTaskTitle,
-      isComplete: false
-    }, ...tasks])
+    setTasks([
+      ...tasks,
+      {
+        id: Math.floor(Math.random() + Date.now()),
+        title: newTaskTitle,
+        isComplete: false
+      }
+    ])
 
     setNewTaskTitle('')
   }
 
-  function findTaskIndex(id: number) {
-    let taskIndex = tasks.findIndex(function (t) {
-      return t.id === id
-    });
-
-    if (taskIndex === -1) return false;
-
-    return taskIndex;
-  }
   function handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
-    if (findTaskIndex(id) >= 0) {
-      let tasksCopy = [...tasks]
-      tasksCopy.map(t => {
-        if (t.id === id) {
-          t.isComplete = !t.isComplete;
-        }
-      })
-      setTasks(tasksCopy)
-    }
+    /**
+     * No inicio eu fiz da maneira abaixo, que funciona perfeitamente
+     * Mas no vídeo da resolução, após concluir, vi que há uma maneira mais curta
+     */
+    // let tasksCopy = [...tasks]
+    // tasksCopy.map(t => {
+    //   if (t.id === id) {
+    //     t.isComplete = !t.isComplete;
+    //   }
+    // })
 
+    const tasksCopy = tasks.map(task => task.id === id ? {
+      ...task,
+      isComplete: !task.isComplete
+      } : task )
+
+    setTasks(tasksCopy)
   }
 
   function handleRemoveTask(id: number) {
