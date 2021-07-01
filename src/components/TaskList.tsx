@@ -38,7 +38,6 @@ export function TaskList() {
     let taskIndex = tasks.findIndex(function (t) {
       return t.id === id
     });
-    console.log({id, taskIndex});
 
     if (taskIndex === -1) return false;
 
@@ -46,23 +45,25 @@ export function TaskList() {
   }
   function handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
-    if (findTaskIndex(id)) {
-      setTasks(
-        tasks.map(task => {
-          if (task.id === id) {
-            task.isComplete = true;
-          }
-        })
-      );
+    if (findTaskIndex(id) >= 0) {
+      let tasksCopy = [...tasks]
+      tasksCopy.map(t => {
+        if (t.id === id) {
+          t.isComplete = !t.isComplete;
+        }
+      })
+      setTasks(tasksCopy)
     }
 
   }
 
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
-    setTasks(
-      tasks.filter(i => i.id !== id)
-    )
+    const newTasks = tasks.filter(t => t.id !== id)
+    setTasks(newTasks)
+    // setTasks(
+    //   tasksCopy.splice(index, 1)
+    // )
   }
 
   return (
